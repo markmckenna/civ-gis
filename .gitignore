@@ -7,4 +7,5 @@
 
 .idea/*
 !.idea/inspectionProfiles/
+!.idea/codeStyleSettings.xml
 *.iml
