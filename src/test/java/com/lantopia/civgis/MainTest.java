@@ -1,4 +1,4 @@
-package com.lantopia.games;
+package com.lantopia.civgis;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -1,4 +1,4 @@
-package com.lantopia.games.gl;
+package com.lantopia.civgis.gl;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -63,6 +63,9 @@ public abstract class BaseRenderable<T> implements Renderable<T> {
         if (state != State.Stopped)
             render(renderTarget);
     }
+
+    public final boolean isRunning() { return (state.get() == State.Running); }
+    public final boolean isPaused() { return (state.get() == State.Paused); }
 
     public abstract void update(final long now, final long millisSinceLastUpdate);
     public abstract void render(final T renderTarget);

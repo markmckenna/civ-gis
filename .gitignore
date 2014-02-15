@@ -7,6 +7,8 @@
 .idea/*
 !.idea/inspectionProfiles/
 !.idea/codeStyleSettings.xml
+!.idea/dictionaries/
 *.iml
 
 target/
+out/

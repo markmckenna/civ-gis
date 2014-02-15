@@ -1,4 +1,4 @@
-package com.lantopia.games;
+package com.lantopia.civgis;
 
 import com.jogamp.newt.Display;
 import com.jogamp.newt.NewtFactory;
@@ -6,9 +6,8 @@ import com.jogamp.newt.Screen;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
-import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.FPSAnimator;
-import com.lantopia.games.utils.Log;
+import com.lantopia.civgis.utils.Log;
 
 import javax.media.opengl.*;
 
@@ -40,22 +39,27 @@ public class Main {
         log.i("Creating GL window");
         final GLWindow window = GLWindow.create(screen, capabilities);
 
-        log.i("Visibilizing window");
-        window.setTitle("Hello world");
-        window.setSize(640, 480);
-        window.setVisible(true);
+        log.i("Starting fixed-frame-rate animation loop");
+        final GLAnimatorControl animator = new FPSAnimator(window, 30);
 
+        log.i("Hooking destructor event");
         window.addWindowListener(new WindowAdapter() {
             @Override
             public void windowDestroyNotify(final WindowEvent e) {
                 log.i("Terminating GL demo app...");
-                System.exit(0);
+                animator.stop();
             }
         });
 
+        log.i("Binding new game app");
         window.addGLEventListener(new Demo());
 
-        final GLAnimatorControl animator = new FPSAnimator(window, 30);
+        log.i("Starting animation");
         animator.start();
+
+        log.i("Visibilizing window");
+        window.setTitle("Hello world");
+        window.setSize(640, 480);
+        window.setVisible(true);
     }
 }

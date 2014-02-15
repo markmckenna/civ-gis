@@ -1,4 +1,4 @@
-package com.lantopia.games.gl;
+package com.lantopia.civgis.gl;
 
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;

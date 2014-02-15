@@ -1,8 +1,8 @@
-package com.lantopia.games.utils;
+package com.lantopia.civgis.utils;
 
+import jogamp.common.Debug;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -43,6 +43,11 @@ public class Log {
     public void i(final Throwable t) { msg(System.out, Level.Info, t); }
     public void d(final String msg) { msg(System.out, Level.Debug, msg); }
     public void d(final Throwable t) { msg(System.out, Level.Debug, t); }
+
+    public void e(final String fmt, final Object... args) { msg(System.err, Level.Error, String.format(fmt, args)); }
+    public void w(final String fmt, final Object... args) { msg(System.err, Level.Warn, String.format(fmt, args)); }
+    public void i(final String fmt, final Object... args) { msg(System.out, Level.Info, String.format(fmt, args)); }
+    public void d(final String fmt, final Object... args) { msg(System.out, Level.Debug, String.format(fmt, args)); }
 
     /**
      * Use like this:
@@ -95,4 +100,6 @@ public class Log {
     private void msg(final PrintStream stream, final Level level, final String msg) {
         stream.println(String.format("[%s %s/%s] %s", timestamp(), context, level, msg));
     }
+
+    public static boolean isDebug() { return Debug.debugAll(); }
 }

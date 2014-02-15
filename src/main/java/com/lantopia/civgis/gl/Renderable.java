@@ -1,4 +1,4 @@
-package com.lantopia.games.gl;
+package com.lantopia.civgis.gl;
 
 /**
  * @author Mark McKenna %lt;mark.mckenna@teamspace.ca>
@@ -10,6 +10,10 @@ public interface Renderable<T> {
     void stop();
     void pause();
     void resume();
+
+    boolean isRunning();
+    boolean isPaused();
+
     void update(long now, long millisSinceLastUpdate);
     void render(T target);
 }
