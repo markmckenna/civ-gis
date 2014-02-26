@@ -7,6 +7,7 @@ import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.lantopia.civgis.gl.AbstractGLEventListener;
 import com.lantopia.civgis.utils.Log;
 
 import javax.media.opengl.*;
@@ -14,21 +15,26 @@ import javax.media.opengl.*;
 public class Main {
     private static Log log = new Log(Main.class.getSimpleName());
 
+    static {
+        Log.logLevel(Log.Level.Info);
+    }
+
     public static void main(final String[] args) {
         log.i("Starting GL demo app...");
 
         log.i("Initializing GLProfile singleton...");
         GLProfile.initSingleton();
 
-        log.i("Checking if GL3 is available...");
-        if (!GLProfile.isAvailable(GLProfile.GL3))
-            throw new RuntimeException("GL3 not available");
+        log.i("Checking if GL2 is available...");
+        if (!GLProfile.isAvailable(GLProfile.GL2))
+            throw new RuntimeException("GL2 not available");
 
         log.i("Creating GL profile");
-        final GLProfile profile = GLProfile.get(GLProfile.GL3);
+        final GLProfile profile = GLProfile.get(GLProfile.GL2);
 
         log.i("Preparing GL capabilities");
         final GLCapabilities capabilities = new GLCapabilities(profile);
+        log.i("Capabilities: " + capabilities);
 
         log.i("Creating NEWT display");
         final Display display = NewtFactory.createDisplay(null);
@@ -51,15 +57,26 @@ public class Main {
             }
         });
 
+        final Demo demo = new Demo();
         log.i("Binding new game app");
-        window.addGLEventListener(new Demo());
+        window.addGLEventListener(demo);
 
         log.i("Starting animation");
         animator.start();
 
+        window.addGLEventListener(new AbstractGLEventListener() {
+            @Override
+            public void init(final GLAutoDrawable drawable) {
+                demo.start();
+            }
+        });
+
         log.i("Visibilizing window");
         window.setTitle("Hello world");
-        window.setSize(640, 480);
+        window.setPosition(30,30);
+        window.setSize(640, 640);
+        window.setFullscreen(false);
         window.setVisible(true);
+        window.setPointerVisible(false);
     }
 }

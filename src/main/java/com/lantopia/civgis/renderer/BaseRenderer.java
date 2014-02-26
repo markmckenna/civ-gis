@@ -1,4 +1,4 @@
-package com.lantopia.civgis.gl;
+package com.lantopia.civgis.renderer;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -7,24 +7,36 @@ import java.util.concurrent.atomic.AtomicReference;
  * @version 0.1
  * @since 11/02/14
  *
- * TODO: Consider splitting this into a PausableRenderable wrapper that delegates to a regular Renderable
- * and adds pause/resume capability (paused Renderable still renders, but doesn't update; and when it is
+ * TODO: Consider splitting this into a PausableRenderable wrapper that delegates to a regular Screen
+ * and adds pause/resume capability (paused Screen still renders, but doesn't update; and when it is
  * unpaused, it picks up from where it was paused in terms of time--rather than 'jumping' to match the new
  * time index)
  */
-public abstract class BaseRenderable<T> implements Renderable<T> {
+public abstract class BaseRenderer<T> implements Renderer<T> {
+    private enum State {
+        New,
+        Stopped,
+        Running,
+        Paused,
+        Transitioning
+    }
+
     private long baseTime =0;
     private long lastPauseTime =0;
     private long lastUpdate =0;
 
-    private enum State {
-        Stopped,
-        Running,
-        Paused,
-        Transitioning;
-    }
+    private final AtomicReference<State> state = new AtomicReference<State>(State.New);
 
-    private final AtomicReference<State> state = new AtomicReference<State>(State.Stopped);
+    // TODO: final
+    private T renderTarget;
+
+    protected final void setRenderTarget(final T target) {
+        state.compareAndSet(State.New, State.Transitioning);
+        // TODO: Constructor
+        this.renderTarget = target;
+        initialize(target);
+        state.set(State.Stopped);
+    }
 
     public final void start() {
         state.compareAndSet(State.Stopped, State.Transitioning); // TODO: check
@@ -52,6 +64,8 @@ public abstract class BaseRenderable<T> implements Renderable<T> {
     }
 
     public final void cycle(final T renderTarget) {
+        if (this.renderTarget != renderTarget) throw new RuntimeException("ERROR: render target instance changed!"); // TODO: typed
+
         final State state = this.state.get();
 
         if (state == State.Running) {
@@ -60,8 +74,7 @@ public abstract class BaseRenderable<T> implements Renderable<T> {
             lastUpdate += now- baseTime;
         }
 
-        if (state != State.Stopped)
-            render(renderTarget);
+        if (state != State.Stopped) render(renderTarget);
     }
 
     public final boolean isRunning() { return (state.get() == State.Running); }

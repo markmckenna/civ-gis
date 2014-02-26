@@ -1,5 +1,7 @@
 package com.lantopia.civgis.gl;
 
+import com.lantopia.civgis.renderer.Renderer;
+
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
@@ -8,10 +10,10 @@ import javax.media.opengl.GLEventListener;
  * @version 0.1
  * @since 14/02/14
  */
-public class JoglRenderer implements GLEventListener, Renderer {
-    private Renderable delegate;
+public class JoglRenderer implements GLEventListener {
+    private Renderer delegate;
 
-    JoglRenderer(final Renderable delegate) {
+    JoglRenderer(final Renderer delegate) {
         this.delegate = delegate;
     }
 
